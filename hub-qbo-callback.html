@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="no-referrer">
+<title>Connecting to Nhlelo Client Hub…</title>
+<style>body{font:15px/1.5 -apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f5f2;color:#1d2329;display:grid;place-items:center;min-height:100vh;margin:0}
+.c{background:#fff;border:1px solid #e3e1dc;border-radius:10px;padding:24px 28px;max-width:440px;text-align:center}a{color:#0f5c4d}</style></head>
+<body><div class="c"><h2 style="margin-top:0;color:#0f5c4d">Nhlelo Client Hub</h2>
+<p id="m">Finishing the QuickBooks connection on this computer…</p></div>
+<script>
+// Relay: Intuit sends the sign-in back here (https); we pass it straight to the Hub running on this computer.
+// Only these three values are forwarded, and only to localhost. Nothing is stored or sent anywhere else.
+(function () {
+  var p = new URLSearchParams(window.location.search), out = new URLSearchParams();
+  ["code", "state", "realmId", "error"].forEach(function (k) { if (p.get(k)) out.set(k, p.get(k)); });
+  var target = "http://localhost:8010/qbo/callback?" + out.toString();
+  history.replaceState(null, "", window.location.pathname);   // drop the code from the address bar and history
+  if (!out.get("state")) { document.getElementById("m").textContent = "This page only completes a QuickBooks connection started from the Hub."; return; }
+  window.location.replace(target);
+  setTimeout(function () {
+    document.getElementById("m").innerHTML = 'If nothing happened, make sure the Hub is running on this computer, then <a href="' + target + '">click here</a>.';
+  }, 4000);
+})();
+</script></body></html>
